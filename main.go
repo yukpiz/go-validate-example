@@ -5,13 +5,14 @@ import (
 	fmt "fmt"
 	"net"
 
+	"github.com/yukpiz/go-validate-example/pb"
 	grpc "google.golang.org/grpc"
 )
 
 func main() {
 	server := grpc.NewServer()
 	h := &handler{}
-	RegisterExampleServer(server, h)
+	pb.RegisterExampleServer(server, h)
 
 	p, err := net.Listen("tcp", ":1111")
 	if err != nil {
@@ -26,6 +27,13 @@ func main() {
 
 type handler struct{}
 
-func (*handler) Hello(ctx context.Context, req *HelloRequest) (*HelloResponse, error) {
-	return nil, nil
+func (*handler) Hello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloResponse, error) {
+	if err := req.Validate(); err != nil {
+		return nil, err
+	}
+	return &pb.HelloResponse{
+		Id:        req.Id,
+		LastName:  req.LastName,
+		FirstName: req.FirstName,
+	}, nil
 }
