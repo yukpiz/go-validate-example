@@ -29,6 +29,9 @@ type handler struct{}
 
 func (*handler) Hello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloResponse, error) {
 	if err := req.Validate(); err != nil {
+		verr, _ := err.(pb.HelloRequestValidationError)
+		fmt.Printf("%+v\n", verr.Field())
+		fmt.Printf("%+v\n", verr.Reason())
 		return nil, newError(ctx, err)
 	}
 	return &pb.HelloResponse{
