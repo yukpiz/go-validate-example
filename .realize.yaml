@@ -3,7 +3,7 @@ settings:
     force: false
     interval: 0s
 schema:
-- name: go-validate-example
+- name: go-validate-example/go
   path: .
   commands:
     install:
@@ -20,3 +20,17 @@ schema:
     ignored_paths:
     - .git
     - .realize
+- name: go-validate-example/proto
+  path: .
+  watcher:
+    extensions:
+    - proto
+    paths:
+    - .
+    ignored_paths:
+    - .git
+    - .realize
+    scripts:
+    - type: before
+      command: bash ./gen-pb.sh
+      output: true
