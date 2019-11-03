@@ -29,11 +29,15 @@ type handler struct{}
 
 func (*handler) Hello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloResponse, error) {
 	if err := req.Validate(); err != nil {
-		return nil, err
+		return nil, newError(ctx, err)
 	}
 	return &pb.HelloResponse{
 		Id:        req.Id,
 		LastName:  req.LastName,
 		FirstName: req.FirstName,
 	}, nil
+}
+
+func newError(ctx context.Context, err error) error {
+	return err
 }
